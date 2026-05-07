@@ -704,6 +704,7 @@ img {
     max-width: 420px;
     backdrop-filter: blur(8px);
     align-items: center;
+    z-index: 0;
 }
 
 .map-info-card p {
