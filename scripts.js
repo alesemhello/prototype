@@ -1,4 +1,4 @@
-// scripts.js - Complete file with clear on search
+// scripts.js - Complete file with mobile sidebar support and map view load more button hiding
 
 // Mode toggle functionality
 const modeToggle = document.getElementById('mode-toggle');
@@ -19,10 +19,77 @@ if (modeToggle) {
     });
 }
 
-// Переключение sidebar через пункт меню
+// Mobile sidebar toggle (the expand icon in top bar)
+const mobileSidebarToggle = document.querySelector('.mobile-sidebar-toggle');
+if (mobileSidebarToggle) {
+    mobileSidebarToggle.onclick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const sidebar = document.getElementById('sidebar');
+        const sidebarMenu = document.getElementById('sidebar-menu');
+        let overlay = document.querySelector('.sidebar-overlay');
+        
+        if (sidebar) {
+            sidebar.classList.toggle('open');
+            
+            // On mobile, always show expanded sidebar
+            if (sidebar.classList.contains('open')) {
+                sidebar.classList.add('expanded');
+                sidebar.classList.remove('collapsed');
+                if (sidebarMenu) {
+                    sidebarMenu.classList.remove('collapsed');
+                    sidebarMenu.classList.add('expanded');
+                }
+            }
+            
+            // Create overlay if it doesn't exist
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.className = 'sidebar-overlay';
+                document.body.appendChild(overlay);
+                
+                overlay.addEventListener('click', () => {
+                    sidebar.classList.remove('open');
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                });
+            }
+            
+            // Toggle overlay
+            if (sidebar.classList.contains('open')) {
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden'; // Prevent background scrolling
+            } else {
+                overlay.classList.remove('active');
+                document.body.style.overflow = ''; // Restore scrolling
+            }
+        }
+    };
+}
+
+// Sidebar toggle from menu item (existing desktop functionality)
 const sidebarToggle = document.querySelector('[data-target="sidebar"]');
 if (sidebarToggle) {
-    sidebarToggle.onclick = () => {
+    sidebarToggle.onclick = (e) => {
+        e.preventDefault();
+        
+        // Check if we're on mobile
+        if (window.innerWidth <= 768) {
+            // On mobile, just close the sidebar
+            const sb = document.getElementById('sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            if (sb) {
+                sb.classList.remove('open');
+                if (overlay) {
+                    overlay.classList.remove('active');
+                }
+                document.body.style.overflow = '';
+            }
+            return;
+        }
+        
+        // Desktop behavior
         const sb = document.getElementById('sidebar');
         const menuText = document.querySelector('[data-target="sidebar"] .text');
         if (sb) {
@@ -39,16 +106,56 @@ if (sidebarToggle) {
     };
 }
 
-// Мобильное меню
+// Mobile menu button (hamburger menu - placeholder for future menu)
 const menuBtn = document.getElementById('menu-btn');
 if (menuBtn) {
-    menuBtn.onclick = () => {
-        const sidebar = document.getElementById('sidebar');
-        if (sidebar) {
-            sidebar.classList.toggle('open');
-        }
+    menuBtn.onclick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Placeholder for future menu functionality
+        console.log('Menu button clicked - future menu will go here');
     };
 }
+
+// Close sidebar when clicking on history links in mobile
+document.querySelectorAll('.history-links a').forEach(link => {
+    link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            if (sidebar) {
+                sidebar.classList.remove('open');
+                if (overlay) {
+                    overlay.classList.remove('active');
+                }
+                document.body.style.overflow = '';
+            }
+        }
+    });
+});
+
+// Close sidebar on window resize if it's open and we're on mobile
+let previousWidth = window.innerWidth;
+window.addEventListener('resize', () => {
+    const currentWidth = window.innerWidth;
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.querySelector('.sidebar-overlay');
+    
+    // If resizing from mobile to desktop, close mobile sidebar
+    if (previousWidth <= 768 && currentWidth > 768 && sidebar) {
+        sidebar.classList.remove('open');
+        if (overlay) {
+            overlay.classList.remove('active');
+        }
+        document.body.style.overflow = '';
+    }
+    
+    previousWidth = currentWidth;
+    
+    // Update map image when resizing
+    updateMapImage();
+});
 
 // Функция для выполнения поиска и перехода на serp.html
 function performSearch() {
@@ -109,11 +216,52 @@ function populateSearchFromUrl() {
     }
 }
 
-// List/Map toggle functionality
+// Function to update map image based on screen size
+function updateMapImage() {
+    const placesMap = document.getElementById('places-map');
+    if (!placesMap) return;
+    
+    const mapImage = placesMap.querySelector('img:not(.map-controls)');
+    if (!mapImage) return;
+    
+    const isMobile = window.innerWidth <= 768;
+    
+    if (isMobile) {
+        // Use mobile map image
+        if (mapImage.src && !mapImage.src.includes('map-mobile.png')) {
+            mapImage.src = 'images/map-mobile.png';
+        } else if (!mapImage.src) {
+            mapImage.src = 'images/map-mobile.png';
+        }
+        // Set 2:3 aspect ratio for mobile
+        mapImage.style.aspectRatio = '2 / 3';
+        mapImage.style.objectFit = 'cover';
+    } else {
+        // Use desktop map image
+        if (mapImage.src && !mapImage.src.includes('map.png')) {
+            mapImage.src = 'images/map.png';
+        } else if (!mapImage.src) {
+            mapImage.src = 'images/map.png';
+        }
+        // Remove aspect ratio constraint for desktop
+        mapImage.style.aspectRatio = '';
+        mapImage.style.objectFit = 'cover';
+    }
+}
+
+// List/Map toggle functionality with Load More button visibility
 const toggleBtns = document.querySelectorAll('.toggle-btn');
 const placesContent = document.getElementById('places-content');
 const placesMap = document.getElementById('places-map');
 const pagination = document.querySelector('.pagination');
+const loadMoreBtn = document.querySelector('.btn-load-more');
+
+function updateLoadMoreForView() {
+    if (loadMoreBtn && window.innerWidth <= 768) {
+        const isMapActive = placesMap && placesMap.style.display !== 'none';
+        loadMoreBtn.style.display = isMapActive ? 'none' : 'flex';
+    }
+}
 
 if (toggleBtns.length > 0 && placesContent && placesMap) {
     toggleBtns.forEach(btn => {
@@ -136,10 +284,25 @@ if (toggleBtns.length > 0 && placesContent && placesMap) {
                 if (pagination) {
                     pagination.style.display = 'none';
                 }
+                // Update map image when showing map view
+                updateMapImage();
             }
+            
+            // Update load more button visibility
+            updateLoadMoreForView();
         });
     });
 }
+
+// Initial call to set correct state
+updateLoadMoreForView();
+updateMapImage();
+
+// Update on window resize
+window.addEventListener('resize', () => {
+    updateLoadMoreForView();
+    updateMapImage();
+});
 
 // Range slider functionality
 const rangeSliders = document.querySelectorAll('.range-slider');

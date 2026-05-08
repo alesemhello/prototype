@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hot.com - Search</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,7 +21,7 @@
             </div>
 
             <div class="sidebar-menu collapsed" id="sidebar-menu">
-                <a href="#" class="menu-item" data-target="sidebar">
+                <a href="#" class="menu-item mobile-hidden" data-target="sidebar">
                     <img src="icons/expand.svg" alt="" aria-hidden="true">
                     <span class="text">Expand</span>
                 </a>
@@ -64,14 +64,23 @@
         <main class="content">
             <!-- Top bar -->
             <header class="top-bar">
+                <div class="top-bar-left">
+                    <button class="mobile-sidebar-toggle" aria-label="Toggle sidebar">
+                        <img src="icons/expand.svg" alt="" aria-hidden="true">
+                    </button>
+                    <a href="index.html" class="mobile-logo">
+                        <img src="icons/logo.svg" alt="Hot.com logo">
+                    </a>
+                </div>
+                
                 <div class="mode-toggle active" id="mode-toggle">
                     <button class="mode-btn active" data-mode="ai">
                         <img src="icons/magicwand.svg" alt="" aria-hidden="true">
-                        AI Mode
+                        <span>AI Mode</span>
                     </button>
                     <button class="mode-btn" data-mode="search">
                         <img src="icons/magnifier.svg" alt="" aria-hidden="true">
-                        Search
+                        <span>Search</span>
                     </button>
                 </div>
 
@@ -105,8 +114,8 @@
                     <a href="#" class="pill">Popular gay escort</a>
                     <a href="#" class="pill">Best VIP escort</a>
                     <a href="#" class="pill">Signs she's losing interest</a>
-                    <a href="#" class="pill">How to introduce BDSM safely</a>
                     <a href="#" class="pill">How to last longer</a>
+                    <a href="#" class="pill">How to introduce BDSM safely</a>
                 </div>
             </div>
 

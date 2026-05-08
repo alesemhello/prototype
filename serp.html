@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Hot.com - Search</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,7 +20,7 @@
             </div>
 
             <div class="sidebar-menu collapsed" id="sidebar-menu">
-                <a href="#" class="menu-item" data-target="sidebar">
+                <a href="#" class="menu-item mobile-hidden" data-target="sidebar">
                     <img src="icons/expand.svg" alt="" aria-hidden="true">
                     <span class="text">Expand</span>
                 </a>
@@ -32,7 +32,7 @@
                     <img src="icons/mail.svg" alt="" aria-hidden="true">
                     <span class="text">Mail</span>
                 </a>
-                <a href="index.html" class="menu-item">
+                <a href="#" class="menu-item">
                     <img src="icons/newchat.svg" alt="" aria-hidden="true">
                     <span class="text">New chat</span>
                 </a>
@@ -63,14 +63,23 @@
         <main class="content">
             <!-- Top bar -->
             <header class="top-bar">
+                <div class="top-bar-left">
+                    <button class="mobile-sidebar-toggle" aria-label="Toggle sidebar">
+                        <img src="icons/expand.svg" alt="" aria-hidden="true">
+                    </button>
+                    <a href="index.html" class="mobile-logo">
+                        <img src="icons/logo.svg" alt="Hot.com logo">
+                    </a>
+                </div>
+                
                 <div class="mode-toggle active" id="mode-toggle">
                     <button class="mode-btn active" data-mode="ai">
                         <img src="icons/magicwand.svg" alt="" aria-hidden="true">
-                        AI Mode
+                        <span>AI Mode</span>
                     </button>
                     <button class="mode-btn" data-mode="search">
                         <img src="icons/magnifier.svg" alt="" aria-hidden="true">
-                        Search
+                        <span>Search</span>
                     </button>
                 </div>
 
@@ -182,9 +191,8 @@
                                 <img src="icons/keyboard_arrow_down.svg" alt="" aria-hidden="true" class="filter-arrow">
                             </div>
 
-                            <div class="filter-item filter-range">
-                                <span class="filter-label">Rating:</span>
-                                <span class="filter-label"><strong>4.5+</strong></span>
+                            <div class="filter-item">
+                                <span class="filter-label">Rating: <strong>4.5+</strong></span>
                                 <img src="icons/keyboard_arrow_down.svg" alt="" aria-hidden="true" class="filter-arrow">
                             </div>
 
@@ -216,6 +224,7 @@
                         </div>
 
                         <div class="places-map" id="places-map" style="display: none;">
+                            <img src="images/map.png" alt="Map of Brooklyn with massage parlor locations">
                             <div class="map-info-card">
                                 <img class="map-info-photo" src="places/place (1).png" alt="Jasmine Beauty Relax">
                                 <div class="map-info-details">
@@ -225,7 +234,6 @@
                                     <p class="map-info-hours"><img src="icons/clock.svg" alt=""> <span>Open</span> · Closes at 10:30 PM</p>
                                 </div>
                             </div>
-                            <img src="images/map.png" alt="Map of Brooklyn with massage parlor locations">
                             <img class="map-controls" src="icons/map-controls.svg" alt="Map controls">
                         </div>
 
@@ -236,7 +244,7 @@
                                 <div class="places-tile-content">
                                     <h3>Jasmine Beauty Relax</h3>
                                     <p class="places-tile-address"><img src="icons/pin.svg">99 Harrison Ave.</p>
-                                    <p class="places-tile-status"><span>Open</span><img src="icons/dot.svg">Closes at 10:30 PM</p>
+                                    <p class="places-tile-status"><span>Open</span>closes at 10:30 PM</p>
                                 </div>
                             </div>
                             <div class="places-tile">
@@ -244,7 +252,7 @@
                                 <div class="places-tile-content">
                                     <h3>Serenity Spa</h3>
                                     <p class="places-tile-address"><img src="icons/pin.svg">123 Main St.</p>
-                                    <p class="places-tile-status"><span>Open</span><img src="icons/dot.svg">Closes at 9:00 PM</p>
+                                    <p class="places-tile-status"><span>Open</span>closes at 9:00 PM</p>
                                 </div>
                             </div>
                             <div class="places-tile">
@@ -252,7 +260,7 @@
                                 <div class="places-tile-content">
                                     <h3>Golden Wellness</h3>
                                     <p class="places-tile-address"><img src="icons/pin.svg">456 Oak Ave.</p>
-                                    <p class="places-tile-status"><span>Open</span><img src="icons/dot.svg">Closes at 11:00 PM</p>
+                                    <p class="places-tile-status"><span>Open</span>closes at 11:00 PM</p>
                                 </div>
                             </div>
                             <div class="places-tile">
@@ -260,7 +268,7 @@
                                 <div class="places-tile-content">
                                     <h3>Healing Hands Massage</h3>
                                     <p class="places-tile-address"><img src="icons/pin.svg">789 Pine St.</p>
-                                    <p class="places-tile-status"><span>Open</span><img src="icons/dot.svg">Closes at 10:00 PM</p>
+                                    <p class="places-tile-status"><span>Open</span>closes at 10:00 PM</p>
                                 </div>
                             </div>
                             <div class="places-tile">
@@ -268,7 +276,7 @@
                                 <div class="places-tile-content">
                                     <h3>Urban Retreat</h3>
                                     <p class="places-tile-address"><img src="icons/pin.svg">321 Elm Blvd.</p>
-                                    <p class="places-tile-status"><span>Open</span><img src="icons/dot.svg">Closes at 9:30 PM</p>
+                                    <p class="places-tile-status"><span>Open</span>closes at 9:30 PM</p>
                                 </div>
                             </div>
                             <div class="places-tile">
@@ -276,7 +284,7 @@
                                 <div class="places-tile-content">
                                     <h3>Bliss Massage Studio</h3>
                                     <p class="places-tile-address"><img src="icons/pin.svg">654 Cedar Ln.</p>
-                                    <p class="places-tile-status"><span>Open</span><img src="icons/dot.svg">Closes at 10:00 PM</p>
+                                    <p class="places-tile-status"><span>Open</span>closes at 10:00 PM</p>
                                 </div>
                             </div>
                             <div class="places-tile">
@@ -284,7 +292,7 @@
                                 <div class="places-tile-content">
                                     <h3>Ocean Breeze Spa</h3>
                                     <p class="places-tile-address"><img src="icons/pin.svg">987 Beach Rd.</p>
-                                    <p class="places-tile-status"><span>Open</span><img src="icons/dot.svg">Closes at 8:30 PM</p>
+                                    <p class="places-tile-status"><span>Open</span>closes at 8:30 PM</p>
                                 </div>
                             </div>
                             <!-- Row 2 -->
@@ -293,7 +301,7 @@
                                 <div class="places-tile-content">
                                     <h3>Lotus Wellness Center</h3>
                                     <p class="places-tile-address"><img src="icons/pin.svg">147 Garden St.</p>
-                                    <p class="places-tile-status"><span>Open</span><img src="icons/dot.svg">Closes at 10:30 PM</p>
+                                    <p class="places-tile-status"><span>Open</span>closes at 10:30 PM</p>
                                 </div>
                             </div>
                             <div class="places-tile">
@@ -301,7 +309,7 @@
                                 <div class="places-tile-content">
                                     <h3>Royal Thai Massage</h3>
                                     <p class="places-tile-address"><img src="icons/pin.svg">258 Siam Ave.</p>
-                                    <p class="places-tile-status"><span>Open</span><img src="icons/dot.svg">Closes at 9:00 PM</p>
+                                    <p class="places-tile-status"><span>Open</span>closes at 9:00 PM</p>
                                 </div>
                             </div>
                             <div class="places-tile">
@@ -309,7 +317,7 @@
                                 <div class="places-tile-content">
                                     <h3>Relax & Unwind</h3>
                                     <p class="places-tile-address"><img src="icons/pin.svg">369 Calm Ln.</p>
-                                    <p class="places-tile-status"><span>Open</span><img src="icons/dot.svg">Closes at 11:00 PM</p>
+                                    <p class="places-tile-status"><span>Open</span>closes at 11:00 PM</p>
                                 </div>
                             </div>
                             <div class="places-tile">
@@ -317,7 +325,7 @@
                                 <div class="places-tile-content">
                                     <h3>Elite Bodywork</h3>
                                     <p class="places-tile-address"><img src="icons/pin.svg">741 Luxury Blvd.</p>
-                                    <p class="places-tile-status"><span>Open</span><img src="icons/dot.svg">Closes at 10:00 PM</p>
+                                    <p class="places-tile-status"><span>Open</span>closes at 10:00 PM</p>
                                 </div>
                             </div>
                             <div class="places-tile">
@@ -325,7 +333,7 @@
                                 <div class="places-tile-content">
                                     <h3>Sunrise Spa</h3>
                                     <p class="places-tile-address"><img src="icons/pin.svg">852 Dawn Dr.</p>
-                                    <p class="places-tile-status"><span>Open</span><img src="icons/dot.svg">Closes at 9:30 PM</p>
+                                    <p class="places-tile-status"><span>Open</span>closes at 9:30 PM</p>
                                 </div>
                             </div>
                             <div class="places-tile">
@@ -333,7 +341,7 @@
                                 <div class="places-tile-content">
                                     <h3>Moonlight Massage</h3>
                                     <p class="places-tile-address"><img src="icons/pin.svg">963 Night Ave.</p>
-                                    <p class="places-tile-status"><span>Open</span><img src="icons/dot.svg">Closes at 12:00 AM</p>
+                                    <p class="places-tile-status"><span>Open</span>closes at 12:00 AM</p>
                                 </div>
                             </div>
                             <div class="places-tile">
@@ -341,7 +349,7 @@
                                 <div class="places-tile-content">
                                     <h3>Zen Den</h3>
                                     <p class="places-tile-address"><img src="icons/pin.svg">159 Peace St.</p>
-                                    <p class="places-tile-status"><span>Open</span><img src="icons/dot.svg">Closes at 8:00 PM</p>
+                                    <p class="places-tile-status"><span>Open</span>closes at 8:00 PM</p>
                                 </div>
                             </div>
                             <!-- Row 3 -->
@@ -350,7 +358,7 @@
                                 <div class="places-tile-content">
                                     <h3>Harmony Health Spa</h3>
                                     <p class="places-tile-address"><img src="icons/pin.svg">753 Balance Way</p>
-                                    <p class="places-tile-status"><span>Open</span><img src="icons/dot.svg">Closes at 10:30 PM</p>
+                                    <p class="places-tile-status"><span>Open</span>closes at 10:30 PM</p>
                                 </div>
                             </div>
                             <div class="places-tile">
@@ -358,7 +366,7 @@
                                 <div class="places-tile-content">
                                     <h3>Pure Relaxation</h3>
                                     <p class="places-tile-address"><img src="icons/pin.svg">951 Calm Creek</p>
-                                    <p class="places-tile-status"><span>Open</span><img src="icons/dot.svg">Closes at 9:00 PM</p>
+                                    <p class="places-tile-status"><span>Open</span>closes at 9:00 PM</p>
                                 </div>
                             </div>
                             <div class="places-tile">
@@ -366,7 +374,7 @@
                                 <div class="places-tile-content">
                                     <h3>Asian Foot & Body</h3>
                                     <p class="places-tile-address"><img src="icons/pin.svg">357 Oriental Rd.</p>
-                                    <p class="places-tile-status"><span>Open</span><img src="icons/dot.svg">Closes at 11:00 PM</p>
+                                    <p class="places-tile-status"><span>Open</span>closes at 11:00 PM</p>
                                 </div>
                             </div>
                             <div class="places-tile">
@@ -374,7 +382,7 @@
                                 <div class="places-tile-content">
                                     <h3>Swedish Touch</h3>
                                     <p class="places-tile-address"><img src="icons/pin.svg">159 Nordic Ln.</p>
-                                    <p class="places-tile-status"><span>Open</span><img src="icons/dot.svg">Closes at 10:00 PM</p>
+                                    <p class="places-tile-status"><span>Open</span>closes at 10:00 PM</p>
                                 </div>
                             </div>
                             <div class="places-tile">
@@ -382,7 +390,7 @@
                                 <div class="places-tile-content">
                                     <h3>Deep Tissue Experts</h3>
                                     <p class="places-tile-address"><img src="icons/pin.svg">753 Muscle Ave.</p>
-                                    <p class="places-tile-status"><span>Open</span><img src="icons/dot.svg">Closes at 9:30 PM</p>
+                                    <p class="places-tile-status"><span>Open</span>closes at 9:30 PM</p>
                                 </div>
                             </div>
                             <div class="places-tile">
@@ -390,20 +398,20 @@
                                 <div class="places-tile-content">
                                     <h3>Sports Recovery</h3>
                                     <p class="places-tile-address"><img src="icons/pin.svg">951 Fitness Way</p>
-                                    <p class="places-tile-status"><span>Open</span><img src="icons/dot.svg">Closes at 8:00 PM</p>
+                                    <p class="places-tile-status"><span>Open</span>closes at 8:00 PM</p>
                                 </div>
                             </div>
-                            <div class="places-tile">
+                            <!--div class="places-tile">
                                 <img class="places-tile-photo" src="places/place (21).png">
                                 <div class="places-tile-content">
                                     <h3>Grand Spa & Sauna</h3>
                                     <p class="places-tile-address"><img src="icons/pin.svg">357 Grand Blvd.</p>
-                                    <p class="places-tile-status"><span>Open</span><img src="icons/dot.svg">Closes at 12:00 AM</p>
+                                    <p class="places-tile-status"><span>Open</span>closes at 12:00 AM</p>
                                 </div>
-                            </div>
+                            </div-->
                         </div>
-
-                        <div class="pagination">
+                        <a class="btn-load-more">Show More</a>
+                        <div class="pagination mobile-hidden">
                             <button class="pagination-prev" disabled>
                                 <img src="icons/chevron-left.svg" alt="" aria-hidden="true">
                                 Prev
