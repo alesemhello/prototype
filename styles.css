@@ -19,11 +19,13 @@
     line-height: 1.666;
     outline: none;
     -webkit-tap-highlight-color: transparent;
+    font-style: normal;
 }
 @font-face {
     font-family: 'PPLX Sans Beta';
-    src: url('fonts/PPLX-Sans-Beta-v2-VF.woff2') format('woff2');
+    src: url('fonts/PPLX-Sans-Beta-v2-VF.woff2') format('woff2-variations');
     font-weight: 100 1000;
+    font-stretch: 25% 151%;
     font-style: normal;
     font-display: swap;
 }
@@ -923,6 +925,8 @@ img {
         width: 100%;
         border-radius: 0;
         z-index: 1000;
+        border: none;
+        border-bottom: 1px solid var(--border);
     }
     .sidebar {
         position: fixed;
