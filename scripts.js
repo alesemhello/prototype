@@ -1,400 +1,284 @@
-// scripts.js - Complete file with mobile sidebar support and map view load more button hiding
+// DOM Elements
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
 
-// Mode toggle functionality
-const modeToggle = document.getElementById('mode-toggle');
+// Mode toggle
+const modeToggle = $('#mode-toggle');
 if (modeToggle) {
-    const modeBtns = modeToggle.querySelectorAll('.mode-btn');
-    
-    modeBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            // Remove active class from all buttons
-            modeBtns.forEach(b => b.classList.remove('active'));
-            // Add active class to clicked button
-            btn.classList.add('active');
-            
-            const mode = btn.dataset.mode;
-            console.log('Mode switched to:', mode);
-            // Add your mode switching logic here
-        });
-    });
+    const btns = $$('.mode-btn');
+    btns.forEach(btn => btn.addEventListener('click', () => {
+        btns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        console.log('Mode switched to:', btn.dataset.mode);
+    }));
 }
 
-// Mobile sidebar toggle (the expand icon in top bar)
-const mobileSidebarToggle = document.querySelector('.mobile-sidebar-toggle');
-if (mobileSidebarToggle) {
-    mobileSidebarToggle.onclick = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        const sidebar = document.getElementById('sidebar');
-        const sidebarMenu = document.getElementById('sidebar-menu');
-        let overlay = document.querySelector('.sidebar-overlay');
-        
-        if (sidebar) {
-            sidebar.classList.toggle('open');
-            
-            // On mobile, always show expanded sidebar
-            if (sidebar.classList.contains('open')) {
-                sidebar.classList.add('expanded');
-                sidebar.classList.remove('collapsed');
-                if (sidebarMenu) {
-                    sidebarMenu.classList.remove('collapsed');
-                    sidebarMenu.classList.add('expanded');
-                }
-            }
-            
-            // Create overlay if it doesn't exist
-            if (!overlay) {
-                overlay = document.createElement('div');
-                overlay.className = 'sidebar-overlay';
-                document.body.appendChild(overlay);
-                
-                overlay.addEventListener('click', () => {
-                    sidebar.classList.remove('open');
-                    overlay.classList.remove('active');
-                    document.body.style.overflow = '';
-                });
-            }
-            
-            // Toggle overlay
-            if (sidebar.classList.contains('open')) {
-                overlay.classList.add('active');
-                document.body.style.overflow = 'hidden'; // Prevent background scrolling
-            } else {
-                overlay.classList.remove('active');
-                document.body.style.overflow = ''; // Restore scrolling
-            }
+// Sidebar management
+const sidebar = $('#sidebar');
+const sidebarMenu = $('#sidebar-menu');
+let overlay = null;
+
+function closeSidebar() {
+    if (!sidebar) return;
+    sidebar.classList.remove('open');
+    if (overlay) overlay.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+function toggleSidebar(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!sidebar) return;
+    sidebar.classList.toggle('open');
+    if (sidebar.classList.contains('open')) {
+        sidebar.classList.add('expanded');
+        sidebar.classList.remove('collapsed');
+        if (sidebarMenu) {
+            sidebarMenu.classList.remove('collapsed');
+            sidebarMenu.classList.add('expanded');
         }
-    };
+        if (!overlay) {
+            overlay = document.createElement('div');
+            overlay.className = 'sidebar-overlay';
+            document.body.appendChild(overlay);
+            overlay.addEventListener('click', closeSidebar);
+        }
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    } else {
+        closeSidebar();
+    }
 }
 
-// Sidebar toggle from menu item (existing desktop functionality)
-const sidebarToggle = document.querySelector('[data-target="sidebar"]');
-if (sidebarToggle) {
-    sidebarToggle.onclick = (e) => {
+// Mobile sidebar toggle
+const mobileToggle = $('.mobile-sidebar-toggle');
+if (mobileToggle) mobileToggle.onclick = toggleSidebar;
+
+// Desktop sidebar toggle
+const desktopToggle = $('[data-target="sidebar"]');
+if (desktopToggle) {
+    desktopToggle.onclick = (e) => {
         e.preventDefault();
-        
-        // Check if we're on mobile
         if (window.innerWidth <= 768) {
-            // On mobile, just close the sidebar
-            const sb = document.getElementById('sidebar');
-            const overlay = document.querySelector('.sidebar-overlay');
-            if (sb) {
-                sb.classList.remove('open');
-                if (overlay) {
-                    overlay.classList.remove('active');
-                }
-                document.body.style.overflow = '';
-            }
+            closeSidebar();
             return;
         }
-        
-        // Desktop behavior
-        const sb = document.getElementById('sidebar');
-        const menuText = document.querySelector('[data-target="sidebar"] .text');
+        const sb = $('#sidebar');
+        const menuText = $('[data-target="sidebar"] .text');
         if (sb) {
             sb.classList.toggle('collapsed');
-            sb.classList.toggle('expanded');
-            const sidebarMenu = document.getElementById('sidebar-menu');
-            if (sidebarMenu) {
-                sidebarMenu.classList.toggle('collapsed');
-            }
-            if (menuText) {
-                menuText.textContent = sb.classList.contains('collapsed') ? 'Expand' : 'Collapse';
-            }
+            if (sidebarMenu) sidebarMenu.classList.toggle('collapsed');
+            if (menuText) menuText.textContent = sb.classList.contains('collapsed') ? 'Expand' : 'Collapse';
         }
     };
 }
 
-// Mobile menu button (hamburger menu - placeholder for future menu)
-const menuBtn = document.getElementById('menu-btn');
-if (menuBtn) {
-    menuBtn.onclick = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        // Placeholder for future menu functionality
-        console.log('Menu button clicked - future menu will go here');
-    };
-}
+// Close sidebar on history link click
+$$('.history-links a').forEach(link => link.addEventListener('click', () => {
+    if (window.innerWidth <= 768) closeSidebar();
+}));
 
-// Close sidebar when clicking on history links in mobile
-document.querySelectorAll('.history-links a').forEach(link => {
-    link.addEventListener('click', () => {
-        if (window.innerWidth <= 768) {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.querySelector('.sidebar-overlay');
-            if (sidebar) {
-                sidebar.classList.remove('open');
-                if (overlay) {
-                    overlay.classList.remove('active');
-                }
-                document.body.style.overflow = '';
-            }
-        }
-    });
-});
-
-// Close sidebar on window resize if it's open and we're on mobile
-let previousWidth = window.innerWidth;
-window.addEventListener('resize', () => {
-    const currentWidth = window.innerWidth;
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.querySelector('.sidebar-overlay');
-    
-    // If resizing from mobile to desktop, close mobile sidebar
-    if (previousWidth <= 768 && currentWidth > 768 && sidebar) {
-        sidebar.classList.remove('open');
-        if (overlay) {
-            overlay.classList.remove('active');
-        }
-        document.body.style.overflow = '';
-    }
-    
-    previousWidth = currentWidth;
-    
-    // Update map image when resizing
-    updateMapImage();
-});
-
-// Функция для выполнения поиска и перехода на serp.html
+// Search functionality
 function performSearch() {
-    const searchInput = document.getElementById('search-input');
-    if (searchInput) {
-        const query = encodeURIComponent(searchInput.value.trim());
-        
-        // Clear the search input
-        searchInput.value = '';
-        
-        // Redirect to serp.html with the search query as a parameter
-        if (query) {
-            window.location.href = 'serp.html?q=' + query;
-        } else {
-            window.location.href = 'serp.html';
-        }
-    }
+    const input = $('#search-input');
+    if (!input) return;
+    const query = encodeURIComponent(input.value.trim());
+    input.value = '';
+    window.location.href = query ? `serp.html?q=${query}` : 'serp.html';
 }
 
-// Поиск и pills
-const searchBtn = document.querySelector('.search-btn-search');
-if (searchBtn) {
-    searchBtn.onclick = (e) => {
-        e.preventDefault();
-        performSearch();
-    };
-}
+const searchBtn = $('.search-btn-search');
+if (searchBtn) searchBtn.onclick = (e) => { e.preventDefault(); performSearch(); };
 
-// Handle pill clicks - set search input value but don't redirect automatically
-document.querySelectorAll('.pill').forEach(p => {
-    p.onclick = e => {
-        e.preventDefault();
-        const searchInput = document.getElementById('search-input');
-        if (searchInput) {
-            searchInput.value = p.textContent;
-        }
-    };
+$$('.pill').forEach(p => p.onclick = e => {
+    e.preventDefault();
+    const input = $('#search-input');
+    if (input) input.value = p.textContent;
 });
 
-// Обработка Enter в поиске на index.html и serp.html
-const searchInput = document.getElementById('search-input');
-if (searchInput) {
-    searchInput.addEventListener('keypress', e => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            performSearch();
-        }
-    });
-}
+const searchInput = $('#search-input');
+if (searchInput) searchInput.addEventListener('keypress', e => {
+    if (e.key === 'Enter') { e.preventDefault(); performSearch(); }
+});
 
-// If on serp.html, populate search input with query parameter from URL
 function populateSearchFromUrl() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const query = urlParams.get('q');
-    const searchInput = document.getElementById('search-input');
-    if (query && searchInput) {
-        searchInput.value = decodeURIComponent(query);
-    }
+    const params = new URLSearchParams(location.search);
+    const query = params.get('q');
+    const input = $('#search-input');
+    if (query && input) input.value = decodeURIComponent(query);
 }
 
-// Function to update map image based on screen size
+// Map image handling
 function updateMapImage() {
-    const placesMap = document.getElementById('places-map');
-    if (!placesMap) return;
-    
-    const mapImage = placesMap.querySelector('img:not(.map-controls)');
-    if (!mapImage) return;
-    
+    const map = $('#places-map');
+    if (!map) return;
+    const img = map.querySelector('img:not(.map-controls)');
+    if (!img) return;
     const isMobile = window.innerWidth <= 768;
-    
+    img.src = isMobile ? 'images/map-mobile.png' : 'images/map.png';
     if (isMobile) {
-        // Use mobile map image
-        if (mapImage.src && !mapImage.src.includes('map-mobile.png')) {
-            mapImage.src = 'images/map-mobile.png';
-        } else if (!mapImage.src) {
-            mapImage.src = 'images/map-mobile.png';
-        }
-        // Set 2:3 aspect ratio for mobile
-        mapImage.style.aspectRatio = '2 / 3';
-        mapImage.style.objectFit = 'cover';
+        img.style.aspectRatio = '2/3';
+        img.style.objectFit = 'cover';
     } else {
-        // Use desktop map image
-        if (mapImage.src && !mapImage.src.includes('map.png')) {
-            mapImage.src = 'images/map.png';
-        } else if (!mapImage.src) {
-            mapImage.src = 'images/map.png';
-        }
-        // Remove aspect ratio constraint for desktop
-        mapImage.style.aspectRatio = '';
-        mapImage.style.objectFit = 'cover';
+        img.style.aspectRatio = '';
+        img.style.objectFit = 'cover';
     }
 }
 
-// List/Map toggle functionality with Load More button visibility
-const toggleBtns = document.querySelectorAll('.toggle-btn');
-const placesContent = document.getElementById('places-content');
-const placesMap = document.getElementById('places-map');
-const pagination = document.querySelector('.pagination');
-const loadMoreBtn = document.querySelector('.btn-load-more');
+// List/Map toggle
+const toggleBtns = $$('.toggle-btn');
+const placesContent = $('#places-content');
+const placesMap = $('#places-map');
+const pagination = $('.pagination');
+const loadMore = $('.btn-load-more');
 
-function updateLoadMoreForView() {
-    if (loadMoreBtn && window.innerWidth <= 768) {
-        const isMapActive = placesMap && placesMap.style.display !== 'none';
-        loadMoreBtn.style.display = isMapActive ? 'none' : 'flex';
+function updateLoadMore() {
+    if (loadMore && window.innerWidth <= 768) {
+        loadMore.style.display = placesMap?.style.display !== 'none' ? 'none' : 'flex';
     }
 }
 
-if (toggleBtns.length > 0 && placesContent && placesMap) {
-    toggleBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            // Remove active class from all buttons
-            toggleBtns.forEach(b => b.classList.remove('active'));
-            // Add active class to clicked button
-            btn.classList.add('active');
-            
-            const view = btn.dataset.view;
-            if (view === 'list') {
-                placesContent.style.display = 'grid';
-                placesMap.style.display = 'none';
-                if (pagination) {
-                    pagination.style.display = 'flex';
-                }
-            } else if (view === 'map') {
-                placesContent.style.display = 'none';
-                placesMap.style.display = 'block';
-                if (pagination) {
-                    pagination.style.display = 'none';
-                }
-                // Update map image when showing map view
-                updateMapImage();
-            }
-            
-            // Update load more button visibility
-            updateLoadMoreForView();
-        });
-    });
+if (toggleBtns.length && placesContent && placesMap) {
+    toggleBtns.forEach(btn => btn.addEventListener('click', () => {
+        toggleBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const isMap = btn.dataset.view === 'map';
+        placesContent.style.display = isMap ? 'none' : 'grid';
+        placesMap.style.display = isMap ? 'block' : 'none';
+        if (pagination) pagination.style.display = isMap ? 'none' : 'flex';
+        if (isMap) updateMapImage();
+        updateLoadMore();
+    }));
 }
 
-// Initial call to set correct state
-updateLoadMoreForView();
-updateMapImage();
-
-// Update on window resize
-window.addEventListener('resize', () => {
-    updateLoadMoreForView();
-    updateMapImage();
-});
-
-// Range slider functionality
-const rangeSliders = document.querySelectorAll('.range-slider');
-rangeSliders.forEach(slider => {
+// Range slider
+$$('.range-slider').forEach(slider => {
     const thumb = slider.querySelector('.range-thumb');
     const fill = slider.querySelector('.range-fill');
     const track = slider.querySelector('.range-track');
-    
-    let isDragging = false;
-    
-    const updateSlider = (clientX) => {
+    let dragging = false;
+    const update = (x) => {
         const rect = track.getBoundingClientRect();
-        let percentage = (clientX - rect.left) / rect.width;
-        percentage = Math.max(0, Math.min(1, percentage));
-        
-        thumb.style.left = (percentage * 100) + '%';
-        fill.style.width = (percentage * 100) + '%';
-        
-        // Update the value display if needed
+        let p = Math.max(0, Math.min(1, (x - rect.left) / rect.width));
+        thumb.style.left = `${p * 100}%`;
+        fill.style.width = `${p * 100}%`;
         const filterItem = slider.closest('.filter-radius');
-        if (filterItem) {
-            const valueDisplay = filterItem.querySelector('.filter-value');
-            if (valueDisplay) {
-                valueDisplay.textContent = Math.round(percentage * 50);
-            }
-        }
+        const val = filterItem?.querySelector('.filter-value');
+        if (val) val.textContent = Math.round(p * 50);
     };
-    
-    thumb.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        e.preventDefault();
-    });
-    
-    track.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        updateSlider(e.clientX);
-        e.preventDefault();
-    });
-    
-    document.addEventListener('mousemove', (e) => {
-        if (isDragging) {
-            updateSlider(e.clientX);
+    const startDrag = (e) => { dragging = true; e.preventDefault(); };
+    const doDrag = (e) => { if (dragging) update(e.clientX || e.touches?.[0]?.clientX); };
+    const endDrag = () => { dragging = false; };
+    thumb.addEventListener('mousedown', startDrag);
+    track.addEventListener('mousedown', (e) => { startDrag(e); update(e.clientX); });
+    document.addEventListener('mousemove', doDrag);
+    document.addEventListener('mouseup', endDrag);
+    thumb.addEventListener('touchstart', startDrag);
+    track.addEventListener('touchstart', (e) => { startDrag(e); update(e.touches[0].clientX); });
+    document.addEventListener('touchmove', doDrag);
+    document.addEventListener('touchend', endDrag);
+});
+
+// Checkbox toggle
+$$('.filter-checkbox').forEach(cb => {
+    const item = cb.closest('.filter-item');
+    if (item) item.addEventListener('click', () => {
+        cb.classList.toggle('checked');
+        if (cb.classList.contains('checked')) {
+            cb.style.cssText = 'background:#EF3F3B; background-image:url("data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"white\"><path d=\"M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z\"/></svg>"); background-size:14px 14px; background-position:center; background-repeat:no-repeat;';
+        } else {
+            cb.style.cssText = 'background:transparent; background-image:none;';
         }
-    });
-    
-    document.addEventListener('mouseup', () => {
-        isDragging = false;
-    });
-    
-    // Touch events for mobile
-    thumb.addEventListener('touchstart', (e) => {
-        isDragging = true;
-        e.preventDefault();
-    });
-    
-    track.addEventListener('touchstart', (e) => {
-        isDragging = true;
-        updateSlider(e.touches[0].clientX);
-        e.preventDefault();
-    });
-    
-    document.addEventListener('touchmove', (e) => {
-        if (isDragging) {
-            updateSlider(e.touches[0].clientX);
-        }
-    });
-    
-    document.addEventListener('touchend', () => {
-        isDragging = false;
     });
 });
 
-// Checkbox toggle functionality
-const filterCheckboxes = document.querySelectorAll('.filter-checkbox');
-filterCheckboxes.forEach(checkbox => {
-    const filterItem = checkbox.closest('.filter-item');
-    if (filterItem) {
-        filterItem.addEventListener('click', () => {
-            checkbox.classList.toggle('checked');
-            if (checkbox.classList.contains('checked')) {
-                checkbox.style.backgroundColor = '#EF3F3B';
-                checkbox.style.backgroundImage = "url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"white\"><path d=\"M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z\"/></svg>')";
-                checkbox.style.backgroundSize = '14px 14px';
-                checkbox.style.backgroundPosition = 'center';
-                checkbox.style.backgroundRepeat = 'no-repeat';
-            } else {
-                checkbox.style.backgroundColor = 'transparent';
-                checkbox.style.backgroundImage = 'none';
-            }
-        });
+// Theme settings
+function createThemePopup() {
+    const root = document.documentElement;
+    const getVar = (name) => getComputedStyle(root).getPropertyValue(name).trim();
+    const html = `
+        <div class="theme-popup-overlay" id="theme-popup-overlay">
+            <div class="theme-popup">
+                <h2>Theme Settings</h2>
+                <h3>Colors</h3>
+                <div class="input-group"><label>Primary:</label><input id="theme-primary" value="${getVar('--primary')}"></div>
+                <div class="input-group"><label>Secondary:</label><input id="theme-secondary" value="${getVar('--secondary')}"></div>
+                <h3>Background Levels</h3>
+                <div class="input-group"><label>Level 0 (Body):</label><input id="theme-level0" value="${getVar('--level0')}"></div>
+                <div class="input-group"><label>Level 1 (Cards):</label><input id="theme-level1" value="${getVar('--level1')}"></div>
+                <div class="input-group"><label>Level 2 (Elements):</label><input id="theme-level2" value="${getVar('--level2')}"></div>
+                <h3>Border & Text</h3>
+                <div class="input-group"><label>Border:</label><input id="theme-border" value="${getVar('--border')}"></div>
+                <div class="input-group"><label>Text Primary:</label><input id="theme-text-primary" value="${getVar('--text-primary')}"></div>
+                <div class="input-group"><label>Text Secondary:</label><input id="theme-text-secondary" value="${getVar('--text-secondary')}"></div>
+                <div class="popup-buttons">
+                    <button class="reset-btn" id="theme-reset">Reset</button>
+                    <button class="cancel-btn" id="theme-cancel">Cancel</button>
+                    <button class="save-btn" id="theme-save">Save</button>
+                </div>
+            </div>
+        </div>`;
+    document.body.insertAdjacentHTML('beforeend', html);
+    const defaults = {
+        '--primary': '#FFFFFF', '--secondary': '#EF3F3B', '--level0': '#171615',
+        '--level1': '#1E1D1B', '--level2': '#2B2A29', '--border': 'rgba(255,255,255,0.2)',
+        '--text-primary': 'white', '--text-secondary': 'rgba(255,255,255,0.4)'
+    };
+    const overlay = $('#theme-popup-overlay');
+    const inputs = {
+        primary: $('#theme-primary'), secondary: $('#theme-secondary'),
+        level0: $('#theme-level0'), level1: $('#theme-level1'), level2: $('#theme-level2'),
+        border: $('#theme-border'), textPrimary: $('#theme-text-primary'), textSecondary: $('#theme-text-secondary')
+    };
+    const save = () => {
+        Object.entries(inputs).forEach(([key, inp]) => root.style.setProperty(`--${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`, inp.value));
+        const settings = {};
+        Object.entries(inputs).forEach(([key, inp]) => settings[`--${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`] = inp.value);
+        localStorage.setItem('themeSettings', JSON.stringify(settings));
+        overlay.style.display = 'none';
+    };
+    const reset = () => {
+        Object.entries(defaults).forEach(([key, val]) => root.style.setProperty(key, val));
+        Object.entries(inputs).forEach(([key, inp]) => inp.value = defaults[`--${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`]);
+        localStorage.removeItem('themeSettings');
+        overlay.style.display = 'none';
+    };
+    $('#theme-save').addEventListener('click', save);
+    $('#theme-cancel').addEventListener('click', () => overlay.style.display = 'none');
+    $('#theme-reset').addEventListener('click', reset);
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.style.display = 'none'; });
+    return overlay;
+}
+
+function loadSavedTheme() {
+    const saved = localStorage.getItem('themeSettings');
+    if (saved) {
+        const theme = JSON.parse(saved);
+        const root = document.documentElement;
+        Object.entries(theme).forEach(([k, v]) => root.style.setProperty(k, v));
     }
+}
+loadSavedTheme();
+
+const themeBtn = $('#theme-settings-btn');
+if (themeBtn) themeBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    let overlay = $('#theme-popup-overlay');
+    if (!overlay) overlay = createThemePopup();
+    overlay.style.display = 'flex';
 });
 
-// Run this when page loads
+// Window resize handlers
+let prevWidth = window.innerWidth;
+window.addEventListener('resize', () => {
+    const curr = window.innerWidth;
+    if (prevWidth <= 768 && curr > 768 && sidebar) closeSidebar();
+    prevWidth = curr;
+    updateLoadMore();
+    updateMapImage();
+});
+
+// Initialize
+updateLoadMore();
+updateMapImage();
 populateSearchFromUrl();
