@@ -21,14 +21,6 @@
     -webkit-tap-highlight-color: transparent;
     font-style: normal;
 }
-@font-face {
-    font-family: 'PPLX Sans Beta';
-    src: url('fonts/PPLX-Sans-Beta-v2-VF.woff2') format('woff2-variations');
-    font-weight: 100 1000;
-    font-stretch: 25% 151%;
-    font-style: normal;
-    font-display: swap;
-}
 html {
     overflow-y: scroll;
     scrollbar-gutter: stable;
