@@ -10,6 +10,13 @@
     --text-secondary: rgba(255, 255, 255, 0.4);
 }
 /* Reset & Base */
+@font-face {
+    font-family: 'PPLX Sans Beta';
+    src: url('fonts/PPLX-Sans-Beta-v2-VF.woff2') format('woff2-variations');
+    font-weight: 100 1000;
+    font-style: normal;
+    font-display: swap;
+}
 * {
     margin: 0;
     padding: 0;
@@ -33,7 +40,13 @@ body {
     margin: 0;
     padding: 0;
     font-style: normal;
-}   
+    font-variation-settings: "wght" 400, "ital" 0;
+    font-synthesis: none;
+}
+strong, b, h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    font-variation-settings: "wght" 700, "ital" 0;
+}
 input,
 textarea,
 button {
