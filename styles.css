@@ -93,6 +93,7 @@ img {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    min-height: 100vh;
 }
 #serp .content {
     margin-bottom: 120px;
@@ -600,7 +601,7 @@ img {
     left: 16px;
     right: 16px;
     z-index: 10;
-    background: rgba(20,28,43,0.95);
+    background: var(--level0);
     border-radius: 12px;
     padding: 8px 16px 8px 8px;
     display: flex;
@@ -610,8 +611,8 @@ img {
     max-width: 420px;
 }
 .map-info-photo {
-    width: 120px;
-    height: 120px;
+    width: 95px;
+    height: 95px;
     border-radius: 8px;
     object-fit: cover;
 }
@@ -971,6 +972,7 @@ img {
     .content-area {
         padding: 12px;
         width: 100%;
+        min-height: calc(100vh - 60px);
     }
     .welcome-text {
         font-size: 22px;
@@ -1049,13 +1051,13 @@ img {
     .map-info-card {
         bottom: 16px;
         top: auto;
-        padding: 12px;
-        gap: 12px;
-        background: rgba(20,28,43,0.98);
+        padding: 8px;
+        gap: 8px;
+        
     }
     .map-info-photo {
-        width: 95px;
-        height: 95px;
+        width: 80px;
+        height: 80px;
     }
     .map-info-name {
         font-size: 14px;
